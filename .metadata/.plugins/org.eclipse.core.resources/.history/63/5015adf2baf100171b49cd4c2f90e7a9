@@ -1,0 +1,10 @@
+package chess;
+
+public class Piece {
+	private String type;
+	private String position;
+	
+	Piece(String type) {
+		this.type = type;
+	}
+}

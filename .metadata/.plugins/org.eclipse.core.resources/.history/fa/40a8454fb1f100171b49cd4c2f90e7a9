@@ -1,0 +1,14 @@
+package chess;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+		System.out.println("ayy lmao");
+		InputStream in = Main.class.getClassLoader().getResource("black-bishop.png");
+		if(in.available() != 0) {
+			System.out.println("Success!");
+		}
+	}
+}

@@ -1,0 +1,81 @@
+package chess;
+
+import java.util.ArrayList;
+
+public class Board {
+	private ArrayList<ArrayList<String>> coords;
+	
+	Board() {
+		this.coords = new ArrayList<ArrayList<String>>();
+		
+		ArrayList<String> a = new ArrayList<String>();
+		ArrayList<String> b = new ArrayList<String>();
+		ArrayList<String> c = new ArrayList<String>();
+		ArrayList<String> d = new ArrayList<String>();
+		ArrayList<String> e = new ArrayList<String>();
+		ArrayList<String> f = new ArrayList<String>();
+		ArrayList<String> g = new ArrayList<String>();
+		ArrayList<String> h = new ArrayList<String>();
+		ArrayList<String> tmp = new ArrayList<String>();
+		for(int i = 0; i < 8; i++) {
+			a.add("++"); b.add("++"); c.add("++"); d.add("++");
+			e.add("++"); f.add("++"); g.add("++"); h.add("++");
+		}
+		a.add(" a"); b.add(" b"); c.add(" c"); d.add(" d"); 
+		e.add(" e"); f.add(" f"); g.add(" g"); h.add(" h"); 
+
+		for(int i = 0; i < 8; i++) {
+			tmp.add(" " + (char)(49 + i));
+		}
+		tmp.add(" " + (char)248);
+		
+		this.coords.add(h);
+		this.coords.add(g);
+		this.coords.add(f);
+		this.coords.add(e);
+		this.coords.add(d);
+		this.coords.add(c);
+		this.coords.add(b);
+		this.coords.add(a);
+		this.coords.add(tmp);
+		
+		setPieces();
+	}
+	
+	public void printBoard() {
+		for(int i = 0; i < this.coords.size(); i++) {
+			for(int j = 0; j < this.coords.get(i).size(); j++) {
+				System.out.print(this.coords.get(i).get(j));
+				System.out.print(" ");
+			}
+			System.out.println(" ");
+		}
+	}
+	
+	private void setPieces() {
+		Piece wp1 = new Piece("wp"); Piece bp1 = new Piece("bp");
+		Piece wp2 = new Piece("wp"); Piece bp2 = new Piece("bp");
+		Piece wp3 = new Piece("wp"); Piece bp3 = new Piece("bp");
+		Piece wp4 = new Piece("wp"); Piece bp4 = new Piece("bp");
+		Piece wp5 = new Piece("wp"); Piece bp5 = new Piece("bp");
+		Piece wp6 = new Piece("wp"); Piece bp6 = new Piece("bp");
+		Piece wp7 = new Piece("wp"); Piece bp7 = new Piece("bp");
+		Piece wp8 = new Piece("wp"); Piece bp8 = new Piece("bp");
+		
+		Piece wk1 = new Piece("wk"); Piece bk1 = new Piece("bk");
+		Piece wk2 = new Piece("wk"); Piece bk2 = new Piece("bk");
+		
+		Piece wb1 = new Piece("wb"); Piece bb1 = new Piece("bb");
+		Piece wb2 = new Piece("wb"); Piece bb2 = new Piece("bb");
+		
+		Piece wr1 = new Piece("wr"); Piece br1 = new Piece("br");
+		Piece wr2 = new Piece("wr"); Piece br2 = new Piece("br");
+		
+		Piece wq1 = new Piece("wq"); Piece bq1 = new Piece("bq");
+		Piece wK2 = new Piece("wK"); Piece bK2 = new Piece("bK");
+		
+		wp1.setPosition("b0"); wp2.setPosition("b1" );
+		
+		
+	}
+}

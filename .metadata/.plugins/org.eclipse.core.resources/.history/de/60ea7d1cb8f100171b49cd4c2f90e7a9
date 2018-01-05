@@ -1,0 +1,42 @@
+package chess;
+
+import java.util.ArrayList;
+
+public class Board {
+	private ArrayList<ArrayList<String>> coords;
+	
+	Board() {
+		ArrayList<String> tmp = new ArrayList<String>();
+		for(int i = 0; i < 8; i++) {
+			tmp.add("++");
+		}
+		this.coords = new ArrayList<ArrayList<String>>();
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				tmp.add("++ ");
+			}
+			tmp.add("" + (char)(104-i));
+			this.coords.add(tmp);
+			for(int k = 0; k < tmp.size(); k++) {
+			System.out.println(tmp.get(k));tmp.clear();
+		}
+		}
+		for(int i = 0; i < 8; i++) {
+			tmp.add(" " + (char)(49+i));
+		}
+		tmp.add(" x");
+		
+		this.coords.add(tmp);
+		tmp.clear();
+	}
+	
+	public void printBoard() {
+		for(int i = 0; i < this.coords.size(); i++) {
+			for(int j = 0; j < this.coords.get(i).size(); j++) {
+				System.out.print(this.coords.get(i).get(j));
+				System.out.print(" ");
+			}
+			System.out.println(" ");
+		}
+	}
+}
