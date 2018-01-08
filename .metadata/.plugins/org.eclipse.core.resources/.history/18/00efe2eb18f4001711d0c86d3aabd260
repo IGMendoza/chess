@@ -1,0 +1,241 @@
+package chess;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Board {
+	private ArrayList<ArrayList<String>> coords;
+	private ArrayList<Piece> whites;
+	private ArrayList<Piece> blacks;
+	private ArrayList<Piece> destroyed;
+	
+	private boolean gameOver;
+	private int turn;
+	
+	private Piece wp1; private Piece bp1;
+	private Piece wp2; private Piece bp2;
+	private Piece wp3; private Piece bp3;
+	private Piece wp4; private Piece bp4;
+	private Piece wp5; private Piece bp5;
+	private Piece wp6; private Piece bp6;
+	private Piece wp7; private Piece bp7;
+	private Piece wp8; private Piece bp8;
+	
+	private Piece wr1; private Piece br1;
+	private Piece wr2; private Piece br2;
+	
+	private Piece wk1; private Piece bk1;
+	private Piece wk2; private Piece bk2;
+	
+	private Piece wb1; private Piece bb1;
+	private Piece wb2; private Piece bb2;
+	
+	private Piece wq; private Piece bq;
+	private Piece wK; private Piece bK;
+	
+	Board() {
+		this.coords = new ArrayList<ArrayList<String>>();
+		
+		ArrayList<String> a = new ArrayList<String>();
+		ArrayList<String> b = new ArrayList<String>();
+		ArrayList<String> c = new ArrayList<String>();
+		ArrayList<String> d = new ArrayList<String>();
+		ArrayList<String> e = new ArrayList<String>();
+		ArrayList<String> f = new ArrayList<String>();
+		ArrayList<String> g = new ArrayList<String>();
+		ArrayList<String> h = new ArrayList<String>();
+		ArrayList<String> tmp = new ArrayList<String>();
+		for(int i = 0; i < 8; i++) {
+			a.add("+++"); b.add("+++"); c.add("+++"); d.add("+++");
+			e.add("+++"); f.add("+++"); g.add("+++"); h.add("+++");
+		}
+		a.add("  a"); b.add("  b"); c.add("  c"); d.add("  d"); 
+		e.add("  e"); f.add("  f"); g.add("  g"); h.add("  h"); 
+
+		for(int i = 0; i < 8; i++) {
+			tmp.add("  " + (char)(49 + i));
+		}
+		tmp.add("  ");
+		
+		this.coords.add(h);
+		this.coords.add(g);
+		this.coords.add(f);
+		this.coords.add(e);
+		this.coords.add(d);
+		this.coords.add(c);
+		this.coords.add(b);
+		this.coords.add(a);
+		this.coords.add(tmp);
+		
+		setNewGame();
+	}
+	
+	private void setNewGame() {
+		this.whites = new ArrayList<Piece>();
+		this.blacks = new ArrayList<Piece>();
+		
+		this.wp1 = new Piece("Pawn", "wp1", "White"); this.bp1 = new Piece("Pawn", "bp1", "Black");
+		this.wp2 = new Piece("Pawn", "wp2", "White"); this.bp2 = new Piece("Pawn", "bp2", "Black");
+		this.wp3 = new Piece("Pawn", "wp3", "White"); this.bp3 = new Piece("Pawn", "bp3", "Black");
+		this.wp4 = new Piece("Pawn", "wp4", "White"); this.bp4 = new Piece("Pawn", "bp4", "Black");
+		this.wp5 = new Piece("Pawn", "wp5", "White"); this.bp5 = new Piece("Pawn", "bp5", "Black");
+		this.wp6 = new Piece("Pawn", "wp6", "White"); this.bp6 = new Piece("Pawn", "bp6", "Black");
+		this.wp7 = new Piece("Pawn", "wp7", "White"); this.bp7 = new Piece("Pawn", "bp7", "Black");
+		this.wp8 = new Piece("Pawn", "wp8", "White"); this.bp8 = new Piece("Pawn", "bp8", "Black");
+		
+		this.wr1 = new Piece("Rook", "wr1", "White"); this.br1 = new Piece("Rook", "br1", "Black");
+		this.wr2 = new Piece("Rook", "wr2", "White"); this.br2 = new Piece("Rook", "br2", "Black");
+		
+		this.wk1 = new Piece("Knight", "wk1", "White"); this.bk1 = new Piece("Knight", "bk1", "Black");
+		this.wk2 = new Piece("Knight", "wk2", "White"); this.bk2 = new Piece("Knight", "bk2", "Black");
+		
+		this.wb1 = new Piece("Bishop", "wb1", "White"); this.bb1 = new Piece("Bishop", "bb1", "Black");
+		this.wb2 = new Piece("Bishop", "wb2", "White"); this.bb2 = new Piece("Bishop", "bb2", "Black");
+		
+		this.wq = new Piece("Queen", " wq", "White"); this.bq = new Piece("Queen", " bq", "Black");
+		this.wK = new Piece("King", " wK", "White"); this.bK = new Piece("King", " bK", "Black");
+		
+		this.wp1.setPosition("b1"); this.bp1.setPosition("g1"); 
+		this.wp2.setPosition("b2"); this.bp2.setPosition("g2");
+		this.wp3.setPosition("b3"); this.bp3.setPosition("g3");
+		this.wp4.setPosition("b4"); this.bp4.setPosition("g4");
+		this.wp5.setPosition("b5"); this.bp5.setPosition("g5");
+		this.wp6.setPosition("b6"); this.bp6.setPosition("g6");
+		this.wp7.setPosition("b7"); this.bp7.setPosition("g7");
+		this.wp8.setPosition("b8"); this.bp8.setPosition("g8");
+		
+		this.wr1.setPosition("a1"); this.br1.setPosition("h1");
+		this.wr2.setPosition("a8"); this.br2.setPosition("h8");
+		
+		this.wk1.setPosition("a2"); this.bk1.setPosition("h2"); 
+		this.wk2.setPosition("a7"); this.bk2.setPosition("h7");
+		
+		this.wb1.setPosition("a3"); this.bb1.setPosition("h3");
+		this.wb2.setPosition("a6"); this.bb2.setPosition("h6");
+		
+		this.wq.setPosition("a4"); this.bq.setPosition("h5");
+		this.wK.setPosition("a5"); this.bK.setPosition("h4");
+		
+		this.whites.add(this.wp1); this.blacks.add(this.bp1);
+		this.whites.add(this.wp2); this.blacks.add(this.bp2);
+		this.whites.add(this.wp3); this.blacks.add(this.bp3);
+		this.whites.add(this.wp4); this.blacks.add(this.bp4);
+		this.whites.add(this.wp5); this.blacks.add(this.bp5);
+		this.whites.add(this.wp6); this.blacks.add(this.bp6);
+		this.whites.add(this.wp7); this.blacks.add(this.bp7);
+		this.whites.add(this.wp8); this.blacks.add(this.bp8);
+		
+		this.whites.add(this.wr1); this.blacks.add(this.br1);
+		this.whites.add(this.wr2); this.blacks.add(this.br2);
+		
+		this.whites.add(this.wk1); this.blacks.add(this.bk1);
+		this.whites.add(this.wk2); this.blacks.add(this.bk2);
+		
+		this.whites.add(this.wb1); this.blacks.add(this.bb1);
+		this.whites.add(this.wb2); this.blacks.add(this.bb2);
+		
+		this.whites.add(this.wq); this.blacks.add(this.bq);
+		this.whites.add(this.wK); this.blacks.add(this.bK);
+	}
+	
+	private void printBoard() {
+		updateBoard("poderTottie");
+		for(int i = 0; i < this.coords.size(); i++) {
+			for(int j = 0; j < this.coords.get(i).size(); j++) {
+				System.out.print(this.coords.get(i).get(j));
+				System.out.print(" ");
+			}
+			System.out.println(" ");
+		}
+		System.out.println("\n---------------------");
+		for(int i = 0; i < this.destroyed.size(); i++) {
+			if(i % 8 == 0 && i != 0) {
+				System.out.println("");
+			}
+			System.out.println(this.destroyed.get(i).getPrintName() + " ");
+		}
+		System.out.flush();
+	}
+	
+	private void updateBoard(String side) {
+		if(side == "whites") {
+			for(int i = 0; i < this.whites.size(); i++) {
+				this.coords.get(this.whites.get(i).getY()).
+						set(this.whites.get(i).getX(), this.whites.get(i).getPrintName());
+			}
+		} else if(side == "blacks"){
+			for(int i = 0; i < this.blacks.size(); i++) {
+				this.coords.get(this.blacks.get(i).getY()).
+						set(this.blacks.get(i).getX(), this.blacks.get(i).getPrintName());
+			}
+		} else {
+			updateBoard("whites");
+			updateBoard("blacks");
+		}
+	}
+	
+	public void startGame() {
+		this.gameOver = false;
+		this.turn = 1;
+		this.destroyed = new ArrayList<Piece>();
+		printBoard();
+		Scanner scanner = new Scanner(System.in);
+		
+		while(!this.gameOver && this.turn < 10) {
+			
+			String colorTurn = (this.turn & 1) == 0 ? "Black's" : "White's";
+			System.out.println("\n" + colorTurn + "turn to move");
+			colorTurn = colorTurn == "White's" ? "whites" : "blacks";
+			
+			String selectedPiece = "";
+			String n_position = "";
+			boolean approved_piece	= false;
+			boolean approved_move	= false;
+			
+			
+			System.out.print("Enter desired Piece to move: ");			
+			while(!approved_piece) {
+				selectedPiece = scanner.nextLine();
+				System.out.println(selectedPiece);
+				if(colorTurn == "whites") {
+					for(int i = 0; i < this.whites.size(); i++) {
+						System.out.println(this.whites.get(i).getName());
+						if(selectedPiece == this.whites.get(i).getName()) {
+							approved_piece = true;
+						}
+					}
+				} else {
+					for(int i = 0; i < this.blacks.size(); i++) {
+						if(selectedPiece == this.blacks.get(i).getName()) {
+							approved_piece = true;
+						}
+					}
+				}
+				if(selectedPiece == "surrender") {
+					approved_piece = true;
+					
+				}
+				System.out.print("Piece not on board! Choose correctly u dumbfuck...: ");
+			}
+			if(approved_piece && selectedPiece == "surrender") {
+				gameOver = true;
+				return;
+				
+			}
+			System.out.println("Enter position to move to: ");
+			while(!approved_move) {
+				n_position = scanner.nextLine();
+			}
+			
+			updateBoard(colorTurn);
+			printBoard();
+			turn++;
+		}
+		
+		String winner = (this.turn & 1) == 0 ? "Whites" : "Blacks";
+		System.out.println("\n---------------------\n" + winner + " wins!");
+		
+		scanner.close();
+	}
+	
+}
