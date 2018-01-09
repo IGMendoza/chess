@@ -1,19 +1,13 @@
 package chess;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Board {
-	
-	private Scanner scanner;
 	
 	private ArrayList<ArrayList<String>> coords;
 	private ArrayList<Piece> whites;
 	private ArrayList<Piece> blacks;
 	private ArrayList<Piece> destroyed;
-	
-	private boolean gameOver;
-	private int turn;
 	
 	private Piece wp1; private Piece bp1;
 	private Piece wp2; private Piece bp2;
@@ -85,6 +79,7 @@ public class Board {
 	private void setNewGame() {
 		this.whites = new ArrayList<Piece>();
 		this.blacks = new ArrayList<Piece>();
+		this.destroyed = new ArrayList<Piece>();
 		
 		// Initialization of Pieces
 		this.wp1 = new Piece("Pawn", "wp1", "White"); this.bp1 = new Piece("Pawn", "bp1", "Black");
@@ -154,7 +149,7 @@ public class Board {
 	}
 	
 	// prints the current board on the console
-	private void printBoard() {
+	public void printBoard() {
 		// updates new positions of Pieces on board
 		updateBoard("poderTottie");
 		// goes through 2D ArrayList containing board and prints them
@@ -177,7 +172,7 @@ public class Board {
 		System.out.flush();
 	}
 	
-	private void updateBoard(String side) {
+	public void updateBoard(String side) {
 		// update Pieces positions if they're white
 		if(side == "whites") {
 			for(int i = 0; i < this.whites.size(); i++) {
@@ -197,91 +192,17 @@ public class Board {
 		}
 	}
 	
-	public void startGame() {
-		// Initialize game variables
-		this.gameOver = false;
-		this.turn = 1;
-		this.destroyed = new ArrayList<Piece>();
-		printBoard();
-		this.scanner = new Scanner(System.in);
-		
-		// continue game until its over
-		while(!this.gameOver && this.turn < 10) {
-			
-			// Declare who's turn it is
-			String colorTurn = (this.turn & 1) == 0 ? "Black's" : "White's";
-			System.out.println("\n" + colorTurn + "turn to move");
-			colorTurn = colorTurn == "White's" ? "whites" : "blacks";
-			
-			String selectedPiece = "";
-			String n_position = "";
-			boolean approved_piece	= false;
-			boolean approved_move	= false;
-			
-			
-			// Get Piece to be moved
-			System.out.print("Enter desired Piece to move: ");
-			// Make sure its a playable Piece by iterating through the current player's available
-			// Pieces discriminated by color
-			while(!approved_piece) {
-				selectedPiece = this.scanner.nextLine();
-				if(colorTurn == "whites") {
-					for(int i = 0; i < this.whites.size(); i++) {
-						if(selectedPiece.equals(this.whites.get(i).getName())) {
-							approved_piece = true;
-						}
-					}
-				} else {
-					for(int i = 0; i < this.blacks.size(); i++) {
-						if(selectedPiece.equals(this.blacks.get(i).getName())) {
-							approved_piece = true;
-						}
-					}
-				}
-				// allow surrender
-				if(selectedPiece == "surrender") {
-					approved_piece = true;
-					
-				}
-				if(!approved_piece) {
-					System.out.print("Piece not on board! Choose correctly u dumbfuck...: ");
-				}
-			}
-			// exit if surrendered
-			if(approved_piece && selectedPiece == "surrender") {
-				gameOver = true;
-				return;
-				
-			}
-			// Get position to move selected Piece to
-			System.out.print("Enter position to move to: ");
-			while(!approved_move) {
-				boolean inMap = false;;
-				n_position = this.scanner.nextLine();
-				// Make sure position given is inside the board map
-				if(n_position.charAt(0) >= 'a' && n_position.charAt(0) <= 'h') {
-					if(n_position.charAt(1) >= '1' && n_position.charAt(1) <= '8') {
-						inMap = true;
-						// More stuff to check
-						approved_move = true;
-					}
-				}
-				if(!inMap) {
-					System.out.println("Enter a position INSIDE the board. i.e. 'g6'");
-				}
-			}
-			// Update game board and print
-			System.out.println("\n\n---------------------\n");
-			updateBoard(colorTurn);
-			printBoard();
-			turn++;
-		}
-		
-		// Establish winner and exit
-		String winner = (this.turn & 1) == 0 ? "Whites" : "Blacks";
-		System.out.println("\n---------------------\n" + winner + " wins!");
-		
-		this.scanner.close();
+	public ArrayList<Piece> getWhites() {
+		return this.whites;
 	}
+	
+	public ArrayList<Piece> getBlacks() {
+		return this.blacks;
+	}
+	
+	public ArrayList<Piece> getDestroyed() {
+		return this.destroyed;
+	}
+	
 	
 }

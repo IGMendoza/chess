@@ -5,6 +5,7 @@ public class Piece {
 	private String name;
 	private String position;
 	private String color;
+	private int hasMoved = 0;
 	
 	Piece(String type, String name, String color) {
 		this.type	= type;
@@ -38,5 +39,20 @@ public class Piece {
 	
 	public String toString(){
 		return this.color + " " + this.type + ": " + this.name + " at: " + this.position;
+	}
+	
+	public boolean move(String n_position) {
+		switch (this.type) {
+		case "pawn": 
+			System.out.println("ayy");
+			if((int)n_position.charAt(1) == (int)this.position.charAt(0) + 2 && 
+					n_position.charAt(0) == this.position.charAt(0) && this.hasMoved == 0) {
+				this.position = n_position;
+				this.hasMoved++;
+				return true;
+			}
+			return false;
+		}
+		return false;
 	}
 }
