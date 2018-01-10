@@ -104,26 +104,26 @@ public class Board {
 		this.wK = new Piece("King", " wK", "White"); this.bK = new Piece("King", " bK", "Black");
 		
 		// Setting positions of Pieces on board
-		this.wp1.setPosition("b1"); this.bp1.setPosition("g1"); 
-		this.wp2.setPosition("b2"); this.bp2.setPosition("g2");
-		this.wp3.setPosition("b3"); this.bp3.setPosition("g3");
-		this.wp4.setPosition("b4"); this.bp4.setPosition("g4");
-		this.wp5.setPosition("b5"); this.bp5.setPosition("g5");
-		this.wp6.setPosition("b6"); this.bp6.setPosition("g6");
-		this.wp7.setPosition("b7"); this.bp7.setPosition("g7");
-		this.wp8.setPosition("b8"); this.bp8.setPosition("g8");
+		this.wp1.setPosition("a2"); this.bp1.setPosition("a7"); 
+		this.wp2.setPosition("b2"); this.bp2.setPosition("b7");
+		this.wp3.setPosition("c2"); this.bp3.setPosition("c7");
+		this.wp4.setPosition("d2"); this.bp4.setPosition("d7");
+		this.wp5.setPosition("e2"); this.bp5.setPosition("e7");
+		this.wp6.setPosition("f2"); this.bp6.setPosition("f7");
+		this.wp7.setPosition("g2"); this.bp7.setPosition("g7");
+		this.wp8.setPosition("h2"); this.bp8.setPosition("h7");
 		
-		this.wr1.setPosition("a1"); this.br1.setPosition("h1");
-		this.wr2.setPosition("a8"); this.br2.setPosition("h8");
+		this.wr1.setPosition("a1"); this.br1.setPosition("a8");
+		this.wr2.setPosition("h1"); this.br2.setPosition("h8");
 		
-		this.wk1.setPosition("a2"); this.bk1.setPosition("h2"); 
-		this.wk2.setPosition("a7"); this.bk2.setPosition("h7");
+		this.wk1.setPosition("b1"); this.bk1.setPosition("b8"); 
+		this.wk2.setPosition("g1"); this.bk2.setPosition("g8");
 		
-		this.wb1.setPosition("a3"); this.bb1.setPosition("h3");
-		this.wb2.setPosition("a6"); this.bb2.setPosition("h6");
+		this.wb1.setPosition("c1"); this.bb1.setPosition("c8");
+		this.wb2.setPosition("f1"); this.bb2.setPosition("f8");
 		
-		this.wq.setPosition("a4"); this.bq.setPosition("h5");
-		this.wK.setPosition("a5"); this.bK.setPosition("h4");
+		this.wq.setPosition("d1"); this.bq.setPosition("d8");
+		this.wK.setPosition("e1"); this.bK.setPosition("e8");
 		
 		// Adding white Pieces to a list containing playable white Pieces (same for blacks)
 		this.whites.add(this.wp1); this.blacks.add(this.bp1);
@@ -190,6 +190,11 @@ public class Board {
 			updateBoard("whites");
 			updateBoard("blacks");
 		}
+	}
+	
+	public void resetSpace(int coord_X, int coord_Y) {
+		this.coords.get(coord_Y).set(coord_X, "+++");
+		System.out.println("\n\n----\n" + this.coords.get(coord_Y).get(coord_X) + "\n-------\n");
 	}
 	
 	public ArrayList<Piece> getWhites() {
