@@ -51,8 +51,8 @@ public class Board {
 			r_5.add("+++"); r_6.add("+++"); r_7.add("+++"); r_8.add("+++");
 		}
 		// last element of rows 1-8 will be denoted by the row number
-		r_1.add("  1"); r_2.add("  2"); r_3.add("  3"); r_4.add("  4"); 
-		r_5.add("  5"); r_6.add("  6"); r_7.add("  7"); r_8.add("  8"); 
+		r_1.add(" 1"); r_2.add(" 2"); r_3.add(" 3"); r_4.add(" 4"); 
+		r_5.add(" 5"); r_6.add(" 6"); r_7.add(" 7"); r_8.add(" 8"); 
 		
 		// row 0 contains column names denoted by letters a-h
 		for(int i = 0; i < 8; i++) {
@@ -151,7 +151,7 @@ public class Board {
 	// prints the current board on the console
 	public void printBoard() {
 		// updates new positions of Pieces on board
-		updateBoard("poderTottie");
+		updateBoard();
 		// goes through 2D ArrayList containing board and prints them
 		for(int i = 0; i < this.coords.size(); i++) {
 			for(int j = 0; j < this.coords.get(i).size(); j++) {
@@ -166,35 +166,31 @@ public class Board {
 			if(i % 8 == 0 && i != 0) {
 				System.out.println("");
 			}
-			System.out.println(this.destroyed.get(i).getName() + " ");
+			System.out.print(this.destroyed.get(i).getName() + " ");
 		}
 		// Flush console to ensure everything is printed
 		System.out.flush();
 	}
 	
-	public void updateBoard(String side) {
+	public void updateBoard() {
 		// update Pieces positions if they're white
-		if(side == "whites") {
-			for(int i = 0; i < this.whites.size(); i++) {
-				this.coords.get(this.whites.get(i).getY()).
-						set(this.whites.get(i).getX(), this.whites.get(i).getName());
+		for(int i = 0; i < this.coords.size() - 1; i++) {
+			for(int j = 0; j < this.coords.size() - 1; j++) {
+				this.coords.get(i).set(j, "+++");
 			}
-		// update Pieces positions if they're black
-		} else if(side == "blacks"){
-			for(int i = 0; i < this.blacks.size(); i++) {
-				this.coords.get(this.blacks.get(i).getY()).
-						set(this.blacks.get(i).getX(), this.blacks.get(i).getName());
-			}
-		// update all Pieces positions
-		} else {
-			updateBoard("whites");
-			updateBoard("blacks");
+		}
+		for(int i = 0; i < this.whites.size(); i++) {
+			this.coords.get(this.whites.get(i).getY()).
+					set(this.whites.get(i).getX(), this.whites.get(i).getName());
+		} 
+		for(int i = 0; i < this.blacks.size(); i++) {
+			this.coords.get(this.blacks.get(i).getY()).
+				set(this.blacks.get(i).getX(), this.blacks.get(i).getName());
 		}
 	}
 	
 	public void resetSpace(int coord_X, int coord_Y) {
 		this.coords.get(coord_Y).set(coord_X, "+++");
-		System.out.println("\n\n----\n" + this.coords.get(coord_Y).get(coord_X) + "\n-------\n");
 	}
 	
 	public ArrayList<Piece> getWhites() {

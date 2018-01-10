@@ -13,7 +13,10 @@ public class GameController {
 	}
 	
 	public void startGame() {
+		// startup messages
 		this.board.printBoard();
+		System.out.println("To surrender: 'surrender'");
+		System.out.println("To cancel move: 'cancel'");
 		// Initialize game variables
 		this.gameOver 			= false;
 		this.turn 				= 1;
@@ -31,11 +34,10 @@ public class GameController {
 		int c_piece_idx			= 0;
 		
 		// continue game until its over
-		while(!this.gameOver && this.turn < 10) {
-			
+		while(!this.gameOver) {
 			// Declare who's turn it is
 			String colorTurn = (this.turn & 1) == 0 ? "Black's" : "White's";
-			System.out.println("\n" + colorTurn + "turn to move");
+			System.out.println("\n" + colorTurn + " turn to move");
 			colorTurn = colorTurn == "White's" ? "whites" : "blacks";
 			
 			// Get Piece to be moved
@@ -83,7 +85,19 @@ public class GameController {
 			System.out.print("Enter position to move to: ");
 			while(!approved_move) {
 				n_position = this.scanner.nextLine();
+				if(n_position.equals("cancel")) {
+					approved_piece = false;
+					approved_move = false;
+					inMap = false;
+					capture = false;
+					treasonous_move = false;
+					this.turn--;
+					break;
+				}
 				
+				if(n_position.equals("surrender")) {
+					break;
+				}
 				// Make sure position given is inside the board map
 				if(n_position.length() != 2) {
 					System.out.print("Enter a valid coordinate: ");
@@ -111,7 +125,8 @@ public class GameController {
 							}
 							if(!approved_move && !treasonous_move) {
 								// if legal to move there, the move is approved
-								approved_move = this.board.getWhites().get(s_piece_idx).move(n_position, capture);
+								approved_move = this.board.getWhites().get(s_piece_idx).
+										move(n_position, capture, this.board.getWhites(), this.board.getBlacks());
 							}
 							// remove captured piece
 							if(approved_move && capture) {
@@ -129,7 +144,7 @@ public class GameController {
 							}
 							// check if its a capture move
 							for(int i = 0; i < this.board.getWhites().size(); i++) {
-								if(this.board.getBlacks().get(i).getPosition().equals(n_position)) {
+								if(this.board.getWhites().get(i).getPosition().equals(n_position)) {
 									capture = true;
 									c_piece_idx = i;
 									break;
@@ -138,7 +153,8 @@ public class GameController {
 							// if n_position is an empty or enemy-occupied space, check if legal to move there
 							if(!approved_move && !treasonous_move) {
 								// if legal to move there, the move is approved
-								approved_move = this.board.getBlacks().get(s_piece_idx).move(n_position, capture);
+								approved_move = this.board.getBlacks().get(s_piece_idx).
+										move(n_position, capture, this.board.getBlacks(), this.board.getWhites());
 							}
 							// remove captured piece
 							if(approved_move && capture) {
@@ -222,17 +238,14 @@ public class GameController {
 					}
 				}
 			}
-			if(approved_move = true && n_position.equals("surrender")) {
+			if(n_position.equals("surrender")) {
 				this.gameOver = true;
 				break;
 				
 			}
 			// Update game board and print
 			System.out.println("\n\n---------------------\n");
-			for(int i = 0; i < this.board.getWhites().size(); i++) {
-				System.out.println(this.board.getWhites().get(i));
-			}
-			//this.board.updateBoard(colorTurn);
+			this.board.updateBoard();
 			this.board.printBoard();
 			turn++;
 			// reset variables

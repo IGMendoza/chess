@@ -1,0 +1,17 @@
+package chess;
+
+import java.io.IOException;
+
+public class Main {
+	public static void main(String[] args) throws IOException {
+
+		Board board = new Board();
+		GameController gc = new GameController(board);
+		gc.startGame();
+		
+		System.out.println("\n--------------------\ndone");
+		String ayy = "g3";
+		ayy = "" + ayy.charAt(0) + (char)(ayy.charAt(1) + 1);
+		System.out.println(ayy);
+	}
+}
