@@ -108,6 +108,7 @@ public class GameController {
 						inMap = true;
 						// More stuff to check. Check by who's turn it is
 						if(colorTurn.equals("whites")) {
+							// check if treason move
 							for(int i = 0; i < this.board.getWhites().size(); i++) {
 								if(this.board.getWhites().get(i).getPosition().equals(n_position)) {
 									// not really, just lets me know if n_position corresponds to ally position
@@ -126,7 +127,8 @@ public class GameController {
 							if(!approved_move && !treasonous_move) {
 								// if legal to move there, the move is approved
 								approved_move = this.board.getWhites().get(s_piece_idx).
-										move(n_position, capture, this.board.getWhites(), this.board.getBlacks());
+										move(n_position, capture, this.board.getWhites(), 
+														this.board.getBlacks(), this.turn);
 							}
 							// remove captured piece
 							if(approved_move && capture) {
@@ -136,6 +138,7 @@ public class GameController {
 							
 							
 						} else {
+							// check if treason move
 							for(int i = 0; i < this.board.getBlacks().size(); i++) {
 								if(this.board.getBlacks().get(i).getPosition().equals(n_position)) {
 									// not really, just lets me know if n_position corresponds to ally position
@@ -154,7 +157,8 @@ public class GameController {
 							if(!approved_move && !treasonous_move) {
 								// if legal to move there, the move is approved
 								approved_move = this.board.getBlacks().get(s_piece_idx).
-										move(n_position, capture, this.board.getBlacks(), this.board.getWhites());
+										move(n_position, capture, this.board.getBlacks(), 
+														this.board.getWhites(), this.turn);
 							}
 							// remove captured piece
 							if(approved_move && capture) {
@@ -185,21 +189,13 @@ public class GameController {
 				System.out.println("Move approved");
 				this.board.resetSpace(o_position_X, o_position_Y);
 				// if Pawn has reached enemy last line... it can transform
-				if(selectedPiece.charAt(1) == 'p' && (n_position.charAt(1) == 8 || n_position.charAt(1) == 1)) {
+				if(selectedPiece.charAt(1) == 'p' && (n_position.charAt(1) == '8' || n_position.charAt(1) == '1')) {
 					// get what to transform to and transform Piece to said transformation
-					System.out.print("Select Piece to transform to (K, Q, b, k, r): ");
+					System.out.print("Select Piece to transform to (Q, b, k, r): ");
 					String transform_to = this.scanner.nextLine();
 					boolean transformed = false;
 					while(!transformed) {
-						if(transform_to.charAt(0) == 'K' && transform_to.length() == 1) {
-							if(colorTurn.equals("Whites")) {
-								this.board.getWhites().get(s_piece_idx).setType("King");
-								transformed = true;
-							} else {
-								this.board.getBlacks().get(s_piece_idx).setType("King");
-								transformed = true;
-							}
-						} else if(transform_to.charAt(0) == 'Q' && transform_to.length() == 1) {
+						if(transform_to.charAt(0) == 'Q' && transform_to.length() == 1) {
 							if(colorTurn.equals("Whites")) {
 								this.board.getWhites().get(s_piece_idx).setType("Queen");
 								transformed = true;

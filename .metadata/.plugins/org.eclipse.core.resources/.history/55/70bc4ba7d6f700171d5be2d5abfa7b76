@@ -1,0 +1,339 @@
+package chess;
+
+import java.util.ArrayList;
+
+public class Piece {
+	private String type;
+	private String name;
+	private String position;
+	private String color;
+	private int hasMoved = 0;
+	
+	Piece(String type, String name, String color) {
+		this.type	= type;
+		this.name	= name;
+		this.color	= color;
+	}
+	
+	public void setPosition(String n_position) {
+		this.position = n_position;
+	}
+	
+	public String getPosition() {
+		return this.position;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public int getX() {
+		return 7 - 104 + (int)(this.position.charAt(0));
+		
+	}
+	
+	public int getY() {
+		return 7 - (int)(this.position.charAt(1)) + 49;
+	}
+	
+	public String getType() {
+		return this.type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public void increaseHasMoved() {
+		this.hasMoved++;
+	}
+	
+	public String toString(){
+		return this.color + " " + this.type + ": " + this.name + " at: " + this.position;
+	}
+	
+	public boolean move(String n_position, boolean capture, ArrayList<Piece> allies, ArrayList<Piece> enemies) {
+		int forward;
+		int forward_2;
+		int horizontal;
+		int vertical;
+		double slope;
+		boolean done_goofed = false;
+		String old_position;
+		switch (this.type) {
+		// Set possible moves for a pawn
+		case "Pawn": 
+			// set if 'forward' means up or down the board
+			forward = this.color.equals("White") ? 1 : -1;
+			forward_2 = this.color.equals("White") ? 2 : -2;
+			// If the move is not a capture...
+			if(!capture) {
+				// Allow a double step as first move for pawn
+				if((int)n_position.charAt(1) == (int)this.position.charAt(1) + forward_2 && 
+						n_position.charAt(0) == this.position.charAt(0) && this.hasMoved == 0) {
+					this.position = n_position;
+					this.hasMoved++;
+					return true;
+				}
+				// Allow pawn to move forward
+				if((int)n_position.charAt(1) == (int)this.position.charAt(1) + forward &&
+						n_position.charAt(0) == this.position.charAt(0)) {
+					this.position = n_position;
+					this.hasMoved++;
+					return true;				
+				}
+			}
+			// If the move is a capture...
+			if(capture) {
+				if((int)n_position.charAt(1) == (int)this.position.charAt(1) + forward &&
+						((int)n_position.charAt(0) == (int)this.position.charAt(0) + 1 ||
+								(int)n_position.charAt(0) == (int)this.position.charAt(0) - 1)) {
+					this.position = n_position;
+					this.hasMoved++;
+					return true;
+				}
+			}
+			// cannot move to that position
+			return false;
+		
+		case "Rook":
+			// Rook can only move horizontally or vertically and cannot jump
+			old_position = this.position;
+			// move Rook
+			if(n_position.charAt(0) == this.position.charAt(0) || 
+					n_position.charAt(1) == this.position.charAt(1)) {
+				horizontal = this.position.charAt(1) < n_position.charAt(1) ? 1 : -1;
+				horizontal = n_position.charAt(0) == this.position.charAt(0) ? 0 : horizontal;
+				
+				vertical = this.position.charAt(1) < n_position.charAt(1) ? 1 : -1;
+				vertical = n_position.charAt(1) == this.position.charAt(1) ? 0 : vertical; 
+				
+				while(!n_position.equals(this.position)) {
+					// check if Rook passes through ally Pieces on its way to its new position
+					for(int i = 0; i < allies.size(); i++) {
+						if(allies.get(i).getPosition().equals(this.position) &&
+								!allies.get(i).getName().equals(this.name)) {
+							// If Rook do, he done goofed
+							done_goofed = true;
+						}
+					}
+					// check if Rook passes through enemy Pieces on its way to its new position
+					for(int i = 0; i < enemies.size() && !done_goofed; i++) {
+						if(enemies.get(i).getPosition().equals(this.position)) {
+							// If Rook do, he done goofed
+							done_goofed = true;
+						}
+					}
+					// If done goofed, return Rook to original position and let GameController know the move failed
+					if(done_goofed) {
+						this.position = old_position;
+						return false;
+					} else {
+						// If not done goofed, move a step closer (vertically) to new position and check again
+						this.position = "" + (char)(this.position.charAt(0) + horizontal) + 
+									(char)(this.position.charAt(1) + vertical);
+					}
+				}
+				return true;
+			}
+		
+		case "Knight":
+			// We check already in GameController if n_space is occupied by allied piece
+			if((int)n_position.charAt(0) == (int)this.position.charAt(0) + 2 ||
+					(int)n_position.charAt(0) == (int)this.position.charAt(0) - 2) {
+				if((int)n_position.charAt(1) == (int)this.position.charAt(1) + 1 || 
+						(int)n_position.charAt(1) == (int)this.position.charAt(1) - 1) {
+					this.position = n_position;
+					return true;
+				}
+			}
+			if((int)n_position.charAt(0) == (int)this.position.charAt(0) + 1 ||
+					(int)n_position.charAt(0) == (int)this.position.charAt(0) - 1) {
+				if((int)n_position.charAt(1) == (int)this.position.charAt(1) + 2 ||
+						(int)n_position.charAt(1) == (int)this.position.charAt(1) - 2) {
+					this.position = n_position;
+					this.hasMoved++;
+					return true;
+				}
+			}
+			return false;
+		
+		case "Bishop":
+			// Bishop can only move diagonally and not jump
+			old_position = this.position;
+			// check if valid n_position
+			slope = (((double)n_position.charAt(1) - 48) - ((double)this.position.charAt(1) - 48)) / 
+					(((double)n_position.charAt(0) - 96) - ((double)this.position.charAt(0) - 96));
+			if(Math.abs(slope) != 1) {
+				return false;
+			}
+			// check the direction the bishop has to move
+			horizontal = (int)n_position.charAt(0) > (int)this.position.charAt(0) ? 1 : -1;
+			vertical = (int)n_position.charAt(1) > (int)this.position.charAt(1) ? 1 : -1;
+			// move step by step on the direction of n_position
+			while(!n_position.equals(this.position)) {
+				// Check if bishop passes through allies
+				for(int i = 0; i < allies.size(); i++) {
+					if(allies.get(i).position.equals(this.position) && 
+							!allies.get(i).getName().equals(this.name)) {
+						// If Bishop do, he done goofed
+						done_goofed = true;
+					}
+				}
+				// Check if bishop passes through enemies
+				for(int i = 0; i < enemies.size(); i++) {
+					if(enemies.get(i).position.equals(this.position)) {
+						// If Bishop do, he done goofed
+						done_goofed = true;
+					}
+				}
+				// If done goofed, return Bishop to original position and let GameController know the move failed
+				if(done_goofed) {
+					this.position = old_position;
+					return false;
+				} else {
+					// If not done goofed, move a step closer to new position and check again
+					this.position = "" + (char)(this.position.charAt(0) + horizontal) + 
+										(char)(this.position.charAt(1) + vertical);
+				}
+			}
+			return true;
+			
+		case "Queen":
+			// Queen can move diagonally, horizontally, or vertically and cannot jump
+			old_position = this.position;
+			slope = (((double)n_position.charAt(1) - 48) - ((double)this.position.charAt(1) - 48)) /
+					(((double)n_position.charAt(0) - 96) - ((double)this.position.charAt(0) - 96));
+			if(Math.abs(slope) != 1 && Math.abs(slope) != 0) {
+				return false;
+			}
+			// horizontal and vertical move
+			horizontal = this.position.charAt(0) < n_position.charAt(0) ? 1 : -1;
+			horizontal = this.position.charAt(0) == n_position.charAt(0) ? 0 : horizontal;
+				
+			vertical = this.position.charAt(1) < n_position.charAt(1) ? 1 : -1;
+			vertical = this.position.charAt(1) == n_position.charAt(1) ? 0 : vertical;
+			
+			while(!n_position.equals(this.position)) {
+				// Check if Queen passes through allies
+				for(int i = 0; i < allies.size(); i++) {
+					if(allies.get(i).position.equals(this.position) && 
+							!allies.get(i).getName().equals(this.name)) {
+						// If Queen do, she done goofed
+						done_goofed = true;
+					}
+				}
+				// Check if Queen passes through enemies
+				for(int i = 0; i < enemies.size(); i++) {
+					if(enemies.get(i).getPosition().equals(this.position)) {
+						// If Queen do, she done goofed
+						done_goofed = true;
+					}
+				}
+				// If done goofed, return Queen to original position and let GameController know the move failed
+				if(done_goofed) {
+					this.position = old_position;
+					return false;
+				}else {
+					// If not done goofed, move a step closer to new position and check again
+					this.position = "" + (char)(this.position.charAt(0) + horizontal) + 
+							(char)(this.position.charAt(1) + vertical);
+				}
+			}
+			return true;
+			
+		case "King":
+			// King can move one step to any direction and cannot jump and can Castle.
+			horizontal = this.position.charAt(0) < n_position.charAt(0) ? 1 : -1;
+			vertical = this.position.charAt(1) < n_position.charAt(1) ? 1 : -1;
+			int rook_idx = 0;
+			// Castling is a thing
+			if(this.hasMoved == 0 && (n_position.charAt(0) == this.position.charAt(0) + 2 || 
+									n_position.charAt(0) == this.position.charAt(0) - 2)) {
+				for(int i = 0; i < allies.size(); i++) {
+					if(this.position.equals("e1") && n_position.equals("c1")) {
+						if(allies.get(i).getPosition().equals("b1") ||
+								allies.get(i).getPosition().equals("d1")) {
+							done_goofed = true;
+						}
+						if(allies.get(i).getName().equals("wr1")) {
+							rook_idx = i;
+						}
+					}
+					if(this.position.equals("e1") && n_position.equals("g1")) {
+						if(allies.get(i).getPosition().equals("f1")) {
+							done_goofed = true;
+						}
+						if(allies.get(i).getName().equals("wr2")) {
+							rook_idx = i;
+						}
+					}
+					if(this.position.equals("e8") && n_position.equals("c8")) {
+						if(allies.get(i).getPosition().equals("b8") ||
+								allies.get(i).getPosition().equals("d8")) {
+							done_goofed = true;
+						}
+						if(allies.get(i).getName().equals("br1")) {
+							rook_idx = i;
+						}
+					}
+					if(this.position.equals("e8") && n_position.equals("g8")) {
+						if(allies.get(i).getPosition().equals("f8")) {
+							done_goofed = true;
+						}
+						if(allies.get(i).getName().equals("br2")) {
+							rook_idx = i;
+						}
+					}
+				}
+				for(int i = 0; i < enemies.size(); i++) {
+					if(this.position.equals("e1") && n_position.equals("c1")) {
+						if(enemies.get(i).getPosition().equals("b1") ||
+								enemies.get(i).getPosition().equals("d1")) {
+							done_goofed = true;
+						}
+					}
+					if(this.position.equals("e1") && n_position.equals("g1")) {
+						if(enemies.get(i).getPosition().equals("f1")) {
+							done_goofed = true;
+						}
+					}
+					if(this.position.equals("e8") && n_position.equals("c8")) {
+						if(enemies.get(i).getPosition().equals("b8") ||
+								enemies.get(i).getPosition().equals("d8")) {
+							done_goofed = true;
+						}
+					}
+					if(this.position.equals("e8") && n_position.equals("g8")) {
+						if(enemies.get(i).getPosition().equals("f8")) {
+							done_goofed = true;
+						}
+					}
+				}
+				// If Castling possible, move both pieces
+				if(!done_goofed) {
+					// Move King
+					this.position = n_position;
+					this.hasMoved++;
+					
+					// Move Rook
+					String rook_position = "";
+					rook_position = n_position.equals("c1") ? "d1" : rook_position;
+					rook_position = n_position.equals("g1") ? "f1" : rook_position;
+					rook_position = n_position.equals("c8") ? "d8" : rook_position;
+					rook_position = n_position.equals("g8") ? "f8" : rook_position;
+					
+					allies.get(rook_idx).setPosition(rook_position);
+					allies.get(rook_idx).increaseHasMoved();
+					return true;
+				}
+			}
+			// Regular moves
+			if(n_position.charAt(0) == this.position.charAt(0) + horizontal &&
+					n_position.charAt(1) == this.position.charAt(1) + horizontal) {
+				
+			}
+		}
+		return false;
+	}
+}
